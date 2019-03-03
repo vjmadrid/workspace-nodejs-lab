@@ -16,12 +16,12 @@ Se definen que elementos se necesitan para instalar el software
 
 Generales
 
-* Instalar y Configurar Node.js (Documento doc/README-instalacion-configuracion-node.md)
-* Instalar y Configurar NVM (Documento doc/README-instalacion-configuracion-nvm.md)
+* Instalar y Configurar Node.js (Documento **doc/README-instalacion-configuracion-node.md**)
+* Instalar y Configurar NVM (Documento **doc/README-instalacion-configuracion-nvm.md**)
 
 Específicos
 
-* Preparar y Configurar un proyecto genérica (Documento doc/README-preparar-configurar-proyecto.md)
+* Preparar y Configurar un proyecto genérica (Documento **doc/README-preparar-configurar-proyecto.md**)
 
 Nota : Si un proyecto tiene otra forma de preparación o configuración se indicara en su propio fichero README
 
