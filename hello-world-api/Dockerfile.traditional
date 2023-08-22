@@ -1,0 +1,59 @@
+#  DESCRIPTION
+#   - One-Stage
+#   - Aproach : BUILD + RUNTIME
+#   - Environment: DEV
+#   - Use a non-optimized image
+#   - Copy the entire project
+
+# Pull official base image
+FROM node:18
+
+
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Set work directory
+WORKDIR /usr/src/app
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+
+
+
+# ****************************
+# *** Prepare Dependencies ***
+# ****************************
+
+# Install app dependencies
+RUN npm install
+
+# Install app dependencies via Yarn
+#RUN yarn install
+
+# Copy project
+COPY . .
+
+# Creates a "dist" folder with the production build
+RUN npm run build
+
+
+# ***************
+# *** Execute ***
+# ***************
+
+# Expose port 3000
+EXPOSE 3000
+
+# Run app.js
+CMD [ "node", "app.js" ]
+# Run the server using the production build
+CMD [ "node", "dist/app.js" ]

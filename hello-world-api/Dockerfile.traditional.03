@@ -1,0 +1,56 @@
+#  DESCRIPTION
+#   - One-Stage
+#   - Aproach : BUILD + RUNTIME
+#   - Environment: DEV
+#   - Use a optimized image
+#   - Copy the entire project
+#   - Execute "lint"
+
+# Pull official base image
+FROM node:18-alpine
+
+
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# ENV NODE_ENV production
+
+
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Set work directory
+WORKDIR /app
+
+# Copy the files package.json and package-lock.json(the asterisk if it exists) in the root of my working directory, /app.
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+
+
+
+# ****************************
+# *** Prepare Dependencies ***
+# ****************************
+
+# Install app dependencies
+# RUN npm install --silent --production && mv node_modules ../
+RUN npm install
+
+#Copy the rest of the files to the /app directory
+COPY . .
+
+#Execute the lint
+RUN npm run lint
+
+# ***************
+# *** Execute ***
+# ***************
+
+# Expose port 3000
+EXPOSE 3000
+
+# Run app.js
+CMD ["npm", "start"]

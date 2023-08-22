@@ -1,0 +1,124 @@
+#  DESCRIPTION
+#   - Multi-Stage
+#   - Aproach : BUILD and RUNTIME
+#   - Use a optimized image
+#   - Best Practices Build
+#   - Copy over the built artifact from the build image
+
+
+
+
+
+# ----- Stage 1: base image -----
+
+# Pull official base image
+FROM node:18-alpine AS base
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Set work directory
+WORKDIR /app
+
+
+
+
+
+# ----- Stage 2: dependencies -----
+
+# Use base image
+FROM base AS dependencies
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Copy project file
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+
+
+
+# ----- Stage 3: test (run linters, setup and tests) -----
+# Use dependencies
+FROM dependencies AS test
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Set work directory
+
+# ****************************
+# *** Prepare Dependencies ***
+# ****************************
+
+# Install ALL node_modules, including 'devDependencies'
+RUN npm install
+
+# Copy the project
+COPY . .
+
+#Execute the lint
+RUN  npm run lint
+
+#Execute the tests
+RUN  npm run test
+
+
+
+# ----- Stage 4: release -----
+# Use base
+FROM base AS release
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+ENV NODE_ENV production
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Copy the files package.json and package-lock.json(the asterisk if it exists) in the root of my working directory, /app.
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"] --from=dependencies
+
+# ****************************
+# *** Prepare Dependencies ***
+# ****************************
+
+# Install app dependencies
+RUN npm install --silent --production && mv node_modules ../
+
+# Copy project
+COPY . .
+
+# ***************
+# *** Execute ***
+# ***************
+
+# Expose port 3000
+EXPOSE 3000
+
+# Run app.js
+CMD ["npm", "start"]

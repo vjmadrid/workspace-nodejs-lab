@@ -1,0 +1,22 @@
+{
+  "name": "hello-world-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "clean": "rm -rf package-lock.json && npm install",
+    "node:version": "echo 'nodejs version: ' && node -v ",
+    "start": "node app.js",
+    "start-dev": "nodemon app.js",
+    "lint": "./node_modules/.bin/eslint ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.47.0",
+    "nodemon": "^3.0.1"
+  }
+}

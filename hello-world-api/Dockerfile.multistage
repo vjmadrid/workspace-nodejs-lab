@@ -1,0 +1,79 @@
+#  DESCRIPTION
+#   - Multi-Stage
+#   - Aproach : BUILD and RUNTIME
+#   - Use a optimized image
+#   - Best Practices Build
+#   - Copy over the built artifact from the build image
+
+
+# ----- Stage 1: Build Stage -----
+
+# Pull official base image
+FROM node:18-alpine as builder
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Set work directory
+WORKDIR /app
+
+# Copy package.json
+COPY package*.json ./
+# ****************************
+# *** Prepare Dependencies ***
+# ****************************
+
+# Install dependencies
+RUN npm install
+
+# Copy the project
+COPY . .
+
+
+
+# ----- Stage 2: Production Stage -----
+
+# Pull official base image
+FROM node:18-alpine
+
+# ***************************
+# *** Prepare Environment ***
+# ***************************
+
+# Set environment variables
+
+# ********************
+# *** Prepare Code ***
+# ********************
+
+# Setup working directory /app
+WORKDIR /app
+
+# Copy the application with its dependencies into a distroless image
+COPY --from=builder /app/dist ./dist
+
+COPY package*.json ./
+
+# ****************************
+# *** Prepare Dependencies ***
+# ****************************
+
+# Install app dependencies
+RUN npm install --production
+
+# ***************
+# *** Execute ***
+# ***************
+
+# Expose port 3000
+EXPOSE 3000
+
+# Run app.js
+CMD ["app.js"]

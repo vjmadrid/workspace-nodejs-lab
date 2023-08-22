@@ -1,0 +1,41 @@
+#  DESCRIPTION
+#   - Multi-Stage
+#   - Aproach : BUILD and RUNTIME
+#   - Use a optimized image
+#   - Best Practices Build
+#   - Copy over the built artifact from the build image
+
+
+# ----- Stage 1: build-env -----
+
+# Pull official base image
+FROM node:18 AS build-env
+
+# Set work directory
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY package.json package.json
+RUN yarn install
+
+# Copy the app.js to /app directory
+COPY app.js /app
+
+
+
+# ----- Stage 2: final build -----
+
+# Pull official distroless Docker image for the final build
+FROM gcr.io/distroless/nodejs
+
+# Set work directory
+WORKDIR /app
+
+# Copy the application with its dependencies into a distroless image
+COPY --from=build-env /app /app
+
+# Expose port 8080 for the app.js
+EXPOSE 8080
+
+# Start the app.js
+CMD ["app.js"]
